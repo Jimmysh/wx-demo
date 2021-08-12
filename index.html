@@ -14,6 +14,7 @@
     const server = "http://www.malianghang.cn/wechat-api/config";
 
     function wechatJsSuccess(conf) {
+        console.log(conf);
         wx.config({
             debug: false,
             appId: "wx763742d9bf7b1b13",
@@ -27,6 +28,7 @@
                 "onRecordEnd",
                 "playVoice",
                 "pauseVoice",
+                "chooseImage",
                 "stopVoice",
                 "uploadVoice",
                 "downloadVoice",
@@ -41,34 +43,25 @@
     fetch(server + `?url=${encodeURIComponent(window.location.href)}`)
         .then((d) => d.json())
         .then((d) => {
+            console.log(d);
             wechatJsSuccess(d);
         });
 
     function takePhoto() {
-
         wx.chooseImage({
             count: 1, // 默认9
             sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
             sourceType: ['camera'], // 可以指定来源是相册还是相机，默认二者都有
             success: function (res) {
                 var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                console.log(res);
+                console.log('camera', res);
+            },
+            error: function (err) {
+                console.log('err', err);
             }
         });
     }
 
-    // window.onload = function () {
-    //     wx.chooseImage({
-    //         count: 1, // 默认9
-    //         sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-    //         sourceType: ['camera'], // 可以指定来源是相册还是相机，默认二者都有
-    //         success: function (res) {
-    //             var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-    //         }
-    //     });
-    //
-    //
-    // }
 </script>
 </body>
 </html>
