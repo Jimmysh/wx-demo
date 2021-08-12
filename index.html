@@ -1,67 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="//res2.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
-</head>
-<body>
-123123
-<button onclick="takePhoto()">拍照</button>
-<script>
-    const server = "http://www.malianghang.cn/wechat-api/config";
+    <script src="//unpkg.com/vconsole/dist/vconsole.min.js"></script>
+  </head>
+  <body>
+    <h1>测试</h1>
+    <button onclick="takePhoto()">拍照</button>
+    <script>
+      const server = "http://www.malianghang.cn/wechat-api/config";
 
-    function wechatJsSuccess(conf) {
-        console.log(conf);
+      function wechatJsSuccess(conf) {
         wx.config({
-            debug: false,
-            appId: "wx763742d9bf7b1b13",
-            timestamp: conf.timestamp,
-            nonceStr: conf.nonceStr,
-            signature: conf.signature,
-            jsApiList: [
-                "checkJsApi",
-                "startRecord",
-                "stopRecord",
-                "onRecordEnd",
-                "playVoice",
-                "pauseVoice",
-                "chooseImage",
-                "stopVoice",
-                "uploadVoice",
-                "downloadVoice",
-                "onMenuShareTimeline",
-                "onMenuShareAppMessage",
-                "onMenuShareQQ",
-                "onMenuShareWeibo",
-            ],
+          debug: false,
+          appId: "wx763742d9bf7b1b13",
+          timestamp: conf.timestamp,
+          nonceStr: conf.nonceStr,
+          signature: conf.signature,
+          jsApiList: [
+            "checkJsApi",
+            "startRecord",
+            "stopRecord",
+            "onRecordEnd",
+            "playVoice",
+            "pauseVoice",
+            "chooseImage",
+            "stopVoice",
+            "uploadVoice",
+            "downloadVoice",
+            "onMenuShareTimeline",
+            "onMenuShareAppMessage",
+            "onMenuShareQQ",
+            "onMenuShareWeibo",
+          ],
         });
-    }
+      }
 
-    fetch(server + `?url=${encodeURIComponent(window.location.href)}`)
+      wx.ready(function () {
+        alert("ready");
+      });
+
+      fetch(server + `?url=${encodeURIComponent(window.location.href)}`)
         .then((d) => d.json())
         .then((d) => {
-            console.log(d);
-            wechatJsSuccess(d);
+          console.log(d);
+          wechatJsSuccess(d);
         });
 
-    function takePhoto() {
+      function takePhoto() {
         wx.chooseImage({
-            count: 1, // 默认9
-            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-            sourceType: ['camera'], // 可以指定来源是相册还是相机，默认二者都有
-            success: function (res) {
-                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                console.log('camera', res);
-            },
-            error: function (err) {
-                console.log('err', err);
-            }
+          count: 1, // 默认9
+          sizeType: ["original", "compressed"], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ["camera"], // 可以指定来源是相册还是相机，默认二者都有
+          success: function (res) {
+            var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+            console.log("camera", res);
+          },
+          error: function (err) {
+            console.log("err", err);
+          },
         });
-    }
-
-</script>
-</body>
+      }
+      var vConsole = new window.VConsole();
+    </script>
+  </body>
 </html>
