@@ -8,18 +8,13 @@
     <script src="//res2.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
     <script src="//cdn.bootcdn.net/ajax/libs/vConsole/3.9.1/vconsole.min.js"></script>
     <style>
-      html,
-      body {
-        padding: 0;
-        margin: 0;
-        width: 50%;
-        height: 100%;
-        overflow: auto;
+      img {
+        max-width: 200px;
       }
     </style>
   </head>
   <body>
-    <h1>测试3</h1>
+    <h1>测试4</h1>
     <button onclick="takePhoto()">拍照</button>
     <h2>代码转化 base64 照片</h2>
     <img id="imgCode" />
@@ -130,7 +125,7 @@
             var localId = res.localIds[0];
             var images = res.tempFilePaths || res.localIds;
             var img = images[0];
-            imgEleCode.src = img;
+            img.src = img;
             getBase64ByCode(img);
             getLocalImgData(localId);
           },
