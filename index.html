@@ -7,18 +7,33 @@
     <title>Document</title>
     <script src="//res2.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
     <script src="//cdn.bootcdn.net/ajax/libs/vConsole/3.9.1/vconsole.min.js"></script>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+    </style>
   </head>
   <body>
     <h1>测试2</h1>
     <button onclick="takePhoto()">拍照</button>
-    <h2>base64照片</h2>
-    <img id="img1" />
+    <h2>代码转化 base64 照片</h2>
+    <img id="imgCode" />
+    <h2>通过元素转化 base64 照片</h2>
+    <img id="imgEleCode" />
+    <h2>判断安卓编码 base64 照片</h2>
+    <img id="localImg" />
     <h2>选择的照片</h2>
-    <img id="img2" />
+    <img id="img" />
     <script>
-      const img1 = document.querySelector("#img1");
-      const img2 = document.querySelector("#img2");
-      const server = "http://www.malianghang.cn/wechat-api/config";
+      var imgCode = document.querySelector("#imgCode");
+      var imgEleCode = document.querySelector("#imgEleCode");
+      var localImg = document.querySelector("#localImg");
+      var img = document.querySelector("#img");
+      var server = "http://www.malianghang.cn/wechat-api/config";
       function wechatJsSuccess(conf) {
         wx.config({
           debug: false,
@@ -26,22 +41,7 @@
           timestamp: conf.timestamp,
           nonceStr: conf.nonceStr,
           signature: conf.signature,
-          jsApiList: [
-            "checkJsApi",
-            "startRecord",
-            "stopRecord",
-            "onRecordEnd",
-            "playVoice",
-            "pauseVoice",
-            "chooseImage",
-            "stopVoice",
-            "uploadVoice",
-            "downloadVoice",
-            "onMenuShareTimeline",
-            "onMenuShareAppMessage",
-            "onMenuShareQQ",
-            "onMenuShareWeibo",
-          ],
+          jsApiList: ["chooseImage", "getLocalImgData"],
         });
       }
 
@@ -56,6 +56,69 @@
           wechatJsSuccess(d);
         });
 
+      function drawBase64(image) {
+        const canvas = document.createElement("canvas");
+        const canvasContext = canvas.getContext("2d");
+        canvas.width = 600;
+        canvas.height = 800;
+        canvasContext.drawImage(
+          image,
+          (image.naturalWidth - 600) / 2,
+          (image.naturalHeight - 800) / 2,
+          600,
+          800,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+        return canvas.toDataURL("image/jpeg", 0.85);
+      }
+      // 代码转化 base64 照片
+      function getBase64ByCode(img) {
+        const image = new Image();
+        image.src = img;
+        image.onload = function () {
+          const canvas = document.createElement("canvas");
+          const canvasContext = canvas.getContext("2d");
+          canvas.width = 600;
+          canvas.height = 800;
+          canvasContext.drawImage(
+            image,
+            (image.naturalWidth - 600) / 2,
+            (image.naturalHeight - 800) / 2,
+            600,
+            800,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+          );
+          imgCode.src = drawBase64(image);
+        };
+      }
+
+      // 通过元素转化 base64 照片
+      img.onload = function () {
+        imgCode.imgEleCode = drawBase64(img);
+      };
+
+      // getLocalImgData
+      function getLocalImgData(localId) {
+        wx.getLocalImgData({
+          localId,
+          success: function (res) {
+            console.log("getLocalImgData", res);
+            var data = res.localData;
+            if (!data.startsWith("data:image/")) {
+              console.log("转化数据");
+              data = window.btoa(data);
+              console.log(data);
+            }
+            localImg.src = data;
+          },
+        });
+      }
       function takePhoto() {
         wx.chooseImage({
           count: 1, // 默认9
@@ -63,37 +126,12 @@
           sourceType: ["camera"], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
             console.log("success", res);
-            const localId = res.localIds[0];
-            wx.getLocalImgData({
-              localId,
-              success: (res) => {
-                console.log("getLocalImgData", res);
-              },
-            });
-            const images = res.tempFilePaths || res.localIds;
-            const img = images[0];
-            img2.src = img;
-            const image = new Image();
-            image.src = img;
-            console.log("img", img);
-            image.onload = () => {
-              const canvas = document.createElement("canvas");
-              const canvasContext = canvas.getContext("2d");
-              canvas.width = 600;
-              canvas.height = 800;
-              canvasContext.drawImage(
-                image,
-                (image.naturalWidth - 600) / 2,
-                (image.naturalHeight - 800) / 2,
-                600,
-                800,
-                0,
-                0,
-                canvas.width,
-                canvas.height
-              );
-              img1.src = canvas.toDataURL("image/jpeg", 0.85);
-            };
+            var localId = res.localIds[0];
+            var images = res.tempFilePaths || res.localIds;
+            var img = images[0];
+            imgEleCode.src = img;
+            getBase64ByCode(img);
+            getLocalImgData(localId);
           },
           error: function (err) {
             console.log("err", err);
