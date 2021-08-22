@@ -31,7 +31,7 @@
       var imgEleCode = document.querySelector("#imgEleCode");
       var localImg = document.querySelector("#localImg");
       var img = document.querySelector("#img");
-      //  img.setAttribute("crossOrigin", "Anonymous");
+      img.setAttribute("crossOrigin", "Anonymous");
       var server = "http://www.malianghang.cn/wechat-api/config";
       function wechatJsSuccess(conf) {
         wx.config({
@@ -71,7 +71,11 @@
           canvas.width,
           canvas.height
         );
-        return canvas.toDataURL("image/jpeg", 0.85);
+        try {
+          return canvas.toDataURL("image/jpeg", 0.85);
+        } catch (error) {
+          console.error(error);
+        }
       }
       // 代码转化 base64 照片
       function getBase64ByCode(img) {
