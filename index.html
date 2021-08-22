@@ -63,7 +63,15 @@
           sourceType: ["camera"], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
             console.log("success", res);
-            const img = res.tempFilePaths[0];
+            const localId = res.localIds[0];
+            this.wx.getLocalImgData({
+              localId,
+              success: (res) => {
+                console.log("getLocalImgData", res);
+              },
+            });
+            const images = res.tempFilePaths || res.localIds;
+            const img = images[0];
             img2.src = img;
             const image = new Image();
             image.src = img;
