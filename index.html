@@ -100,7 +100,7 @@
             var data = res.localData;
             if (!data.startsWith("data:image/")) {
               console.log("转化数据");
-              data = "data:image/jpeg;base64," + window.btoa(data);
+              data = "data:image/jpeg;base64," + localData.replace(/\n/g, "");
             }
             localImg.src = data;
           },
