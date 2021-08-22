@@ -98,9 +98,13 @@
           success: function (res) {
             console.log("getLocalImgData", res);
             var data = res.localData;
-            if (!data.startsWith("data:image/")) {
+            if (!data.startsWith("data:image")) {
               console.log("转化数据");
-              data = "data:image/jpeg;base64," + localData.replace(/\n/g, "");
+              data =
+                "data:image/jpeg;base64," +
+                localData
+                  .replace(/\r|\n/g, "")
+                  .replace("data:image/jgp", "data:image/jpeg");
             }
             localImg.src = data;
           },
