@@ -64,7 +64,7 @@
           success: function (res) {
             console.log("success", res);
             const localId = res.localIds[0];
-            this.wx.getLocalImgData({
+            wx.getLocalImgData({
               localId,
               success: (res) => {
                 console.log("getLocalImgData", res);
