@@ -124,9 +124,9 @@
             console.log("success", res);
             var localId = res.localIds[0];
             var images = res.tempFilePaths || res.localIds;
-            var img = images[0];
-            img.src = img;
-            getBase64ByCode(img);
+            var imgSrc = images[0];
+            img.src = imgSrc;
+            getBase64ByCode(imgSrc);
             getLocalImgData(localId);
           },
           error: function (err) {
